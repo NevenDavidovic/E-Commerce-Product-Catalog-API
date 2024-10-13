@@ -1,0 +1,12 @@
+{
+  "name": "neven/e-commerce-product-catalog-api",
+  "description": "E-commerce dummy app",
+  "authors": [
+    {
+      "name": "NevenDavidovic"
+    }
+  ],
+  "require": {
+    "nikic/fast-route": "^1.3"
+  }
+}
