@@ -24,10 +24,10 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 
     // Product routes
     $r->addRoute('GET', '/products', ['ProductController', 'getAllProducts']);
-    $r->addRoute('GET', '/products/{sku}', ['ProductController', 'getProductBySKU']);
+    $r->addRoute('GET', '/products/{SKU}', ['ProductController', 'getProductBySKU']);
     $r->addRoute('POST', '/products', ['ProductController', 'createProduct']);
-    $r->addRoute('PUT', '/products/{sku}', ['ProductController', 'updateProduct']);
-    $r->addRoute('DELETE', '/products/{sku}', ['ProductController', 'deleteProduct']);
+    $r->addRoute('PUT', '/products/{SKU}', ['ProductController', 'updateProduct']);
+    $r->addRoute('DELETE', '/products/{SKU}', ['ProductController', 'deleteProduct']);
 
     // Category routes
     $r->addRoute('GET', '/categories', ['CategoryController', 'getAllCategories']);

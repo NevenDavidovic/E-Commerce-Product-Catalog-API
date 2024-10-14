@@ -18,7 +18,7 @@ class ProductController {
     }
 
     public function getProductBySKU($vars) {
-        $sku = $vars['sku'];
+        $sku = $vars['SKU'];
         $product = (new ProductService())->getProductBySKU($sku);
         if ($product) {
             echo json_encode($product);
@@ -42,8 +42,13 @@ class ProductController {
     }
 
     public function updateProduct($vars) {
-        $sku = $vars['sku'];
+        $sku = $vars['SKU'];
         $input = json_decode(file_get_contents('php://input'), true);
+        
+        // Debugging logs
+        error_log("SKU received: " . $sku);
+        error_log("Input data: " . json_encode($input));
+        
         $result = (new ProductService())->updateProduct($sku, $input);
         
         if ($result !== null) {
@@ -53,9 +58,10 @@ class ProductController {
             echo json_encode(['error' => 'Product not found or invalid data']);
         }
     }
+    
 
     public function deleteProduct($vars) {
-        $sku = $vars['sku'];
+        $sku = $vars['SKU'];
         $result = (new ProductService())->deleteProduct($sku);
         
         if ($result) {

@@ -36,6 +36,8 @@ class ProductService {
         return $updatedProduct; // Return the updated product
     }
 
+    
+
     public function deleteProduct($sku) {
         $deleted = (new Product())->delete($sku);
         return $deleted; // Return true if deleted successfully, false otherwise
@@ -43,7 +45,7 @@ class ProductService {
 
     private function validateProductData($data, $isNew = true) {
         // Check if required fields are present
-        if (empty($data['sku']) || empty($data['name']) || empty($data['price']) || empty($data['type']) || empty($data['category_id'])) {
+        if (empty($data['SKU']) || empty($data['name']) || empty($data['price']) || empty($data['type']) || empty($data['category_id'])) {
             return false; // Invalid input
         }
         
