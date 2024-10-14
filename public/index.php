@@ -31,6 +31,7 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 
     // Category routes
     $r->addRoute('GET', '/categories', ['CategoryController', 'getAllCategories']);
+    $r->addRoute('GET', '/categories/{id}', ['CategoryController', 'getCategoryById']);
 });
 
 // Fetch method and URI from the request

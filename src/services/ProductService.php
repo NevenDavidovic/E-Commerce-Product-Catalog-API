@@ -47,8 +47,6 @@ class ProductService {
             return false; // Invalid input
         }
         
-        // Add additional validation as necessary (e.g., check data types, value ranges)
-        
         return true; // Valid input
     }
 }
