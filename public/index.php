@@ -1,7 +1,8 @@
 <?php
 // Include the database class
 require_once '../src/Config/Database.php';
-require_once '../src/Controllers/ProductController.php'; // Adjust the path as necessary
+require_once '../src/Controllers/ProductController.php';
+require_once '../src/Controllers/CategoryController.php'; 
 
 
 
@@ -9,7 +10,7 @@ require_once '../src/Controllers/ProductController.php'; // Adjust the path as n
 // Test the database connection
 Database::getConnection();
 
-require_once '../vendor/autoload.php'; // Composer autoload
+require_once '../vendor/autoload.php'; 
 
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
