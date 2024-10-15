@@ -45,7 +45,7 @@ class ProductService {
 
     private function validateProductData($data, $isNew = true) {
         // Check if required fields are present
-        if (empty($data['SKU']) || empty($data['name']) || empty($data['price']) || empty($data['type']) || empty($data['category_id'])) {
+        if (empty($data['sku']) || empty($data['name']) || empty($data['price']) || empty($data['type']) || empty($data['category_id'])) {
             return false; // Invalid input
         }
         

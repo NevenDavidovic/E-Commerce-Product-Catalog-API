@@ -1,14 +1,22 @@
 <?php
+
+// CORS headers
+header("Access-Control-Allow-Origin: *");  // Allows requests from any domain
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");  // Specifies allowed methods
+header("Access-Control-Allow-Headers: Content-Type, Authorization");  // Specifies allowed headers
+
+// Handle preflight OPTIONS request (if needed)
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);  // Return OK for preflight
+    exit;
+}
+
 // Include the database class
 require_once '../src/Config/Database.php';
 require_once '../src/Controllers/ProductController.php';
 require_once '../src/Controllers/CategoryController.php'; 
 
 
-
-
-// Test the database connection
-Database::getConnection();
 
 require_once '../vendor/autoload.php'; 
 
@@ -24,10 +32,10 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 
     // Product routes
     $r->addRoute('GET', '/products', ['ProductController', 'getAllProducts']);
-    $r->addRoute('GET', '/products/{SKU}', ['ProductController', 'getProductBySKU']);
+    $r->addRoute('GET', '/products/{sku}', ['ProductController', 'getProductBySKU']);
     $r->addRoute('POST', '/products', ['ProductController', 'createProduct']);
-    $r->addRoute('PUT', '/products/{SKU}', ['ProductController', 'updateProduct']);
-    $r->addRoute('DELETE', '/products/{SKU}', ['ProductController', 'deleteProduct']);
+    $r->addRoute('PUT', '/products/{sku}', ['ProductController', 'updateProduct']);
+    $r->addRoute('DELETE', '/products/{sku}', ['ProductController', 'deleteProduct']);
 
     // Category routes
     $r->addRoute('GET', '/categories', ['CategoryController', 'getAllCategories']);
@@ -44,23 +52,17 @@ if (false !== $pos = strpos($uri, '?')) {
 }
 $uri = rawurldecode($uri);
 
-// Debugging: Log the original URI
-echo "Original URI: " . $uri . "<br>";
 
 // Remove the /E-Commerce-Product-Catalog-API/public/index.php part from the URI
-$basePath = '/E-Commerce-Product-Catalog-API/public';
+$basePath = '/E-Commerce-Product-Catalog-API/backend/public';
 if (strpos($uri, $basePath) === 0) {
     $uri = substr($uri, strlen($basePath));
 }
 
-// Debugging: Log the stripped URI
-echo "Stripped URI: " . $uri . "<br>";
+
 
 // Dispatch the request
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
-
-// Debugging: Log route info result
-var_dump($routeInfo);
 
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:

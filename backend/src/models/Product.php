@@ -63,17 +63,17 @@ class Product {
 
     public function create($data) {
         // Validate the input data
-        if (empty($data['name']) || empty($data['price']) || empty($data['SKU'])) {
+        if (empty($data['name']) || empty($data['price']) || empty($data['sku'])) {
             throw new Exception('Invalid input: name, price, and SKU are required.');
         }
     
         // Prepare the SQL statement
-        $stmt = $this->db->prepare("INSERT INTO products (name, price, SKU, category_id, type, description, image_url) VALUES (:name, :price, :sku, :category_id, :type, :description, :image_url)");
+        $stmt = $this->db->prepare("INSERT INTO products (name, price, sku, category_id, type, description, image_url) VALUES (:name, :price, :sku, :category_id, :type, :description, :image_url)");
         
         // Bind parameters
         $stmt->bindParam(':name', $data['name']);
         $stmt->bindParam(':price', $data['price']);
-        $stmt->bindParam(':sku', $data['SKU']);
+        $stmt->bindParam(':sku', $data['sku']);
         $stmt->bindParam(':category_id', $data['category_id']);
         $stmt->bindParam(':type', $data['type']);
         $stmt->bindParam(':description', $data['description']); // Bind the description

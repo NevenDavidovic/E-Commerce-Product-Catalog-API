@@ -12,13 +12,13 @@ class ProductController {
             'price_min' => $_GET['price_min'] ?? null,
             'price_max' => $_GET['price_max'] ?? null,
         ];
-        
+        header('Content-Type: application/json');
         $products = (new ProductService())->getAllProducts($filters);
         echo json_encode($products);
     }
 
     public function getProductBySKU($vars) {
-        $sku = $vars['SKU'];
+        $sku = $vars['sku'];
         $product = (new ProductService())->getProductBySKU($sku);
         if ($product) {
             echo json_encode($product);
@@ -42,7 +42,7 @@ class ProductController {
     }
 
     public function updateProduct($vars) {
-        $sku = $vars['SKU'];
+        $sku = $vars['sku'];
         $input = json_decode(file_get_contents('php://input'), true);
         
         // Debugging logs
@@ -61,7 +61,7 @@ class ProductController {
     
 
     public function deleteProduct($vars) {
-        $sku = $vars['SKU'];
+        $sku = $vars['sku'];
         $result = (new ProductService())->deleteProduct($sku);
         
         if ($result) {
