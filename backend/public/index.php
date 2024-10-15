@@ -59,8 +59,6 @@ if (strpos($uri, $basePath) === 0) {
     $uri = substr($uri, strlen($basePath));
 }
 
-
-
 // Dispatch the request
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 

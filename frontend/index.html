@@ -9,68 +9,145 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
     <!-- Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f9;
-        margin: 0;
-        padding: 20px;
-      }
-      h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        color: #333;
-      }
-      .container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-      }
-      .product {
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin: 10px;
-        padding: 20px;
-        width: 200px;
-        text-align: center;
-        transition: transform 0.3s ease;
-      }
-      .product:hover {
-        transform: translateY(-5px);
-      }
-      .product img {
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-      }
-      .product h3 {
-        font-size: 18px;
-        color: #333;
-        margin-bottom: 10px;
-      }
-      .product p {
-        font-size: 14px;
-        color: #666;
-      }
-      .product span {
-        font-size: 16px;
-        font-weight: bold;
-        color: #27ae60;
-      }
-    </style>
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <div id="app">
       <h1>Product List</h1>
+
+      <div class="filters-section">
+        <!-- Search Bar -->
+        <input
+          type="text"
+          v-model="searchName"
+          placeholder="Search by name..."
+          @input="fetchProducts"
+        />
+
+        <!-- Category Dropdown -->
+        <select v-model="selectedCategory" @change="fetchProducts">
+          <option value="">All Categories</option>
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
+        </select>
+
+        <!-- Type Filter
+        <select v-model="selectedType" @change="fetchProducts">
+          <option value="">All Types</option>
+          <option v-for="type in types" :key="type" :value="type">
+            {{ type }}
+          </option>
+        </select> -->
+
+        <!-- Price Range Slider -->
+        <label for="priceMin">Price Min: {{ priceMin }}</label>
+        <input
+          type="range"
+          id="priceMin"
+          v-model="priceMin"
+          @input="fetchProducts"
+          :max="priceMax"
+          :min="0"
+        />
+
+        <label for="priceMax">Price Max: {{ priceMax }}</label>
+        <input
+          type="range"
+          id="priceMax"
+          v-model="priceMax"
+          @input="fetchProducts"
+          :max="1000"
+          :min="0"
+        />
+      </div>
+
       <div class="container">
         <div class="product" v-for="product in products" :key="product.id">
           <img :src="product.image_url" alt="Product Image" />
           <h3>{{ product.name }}</h3>
           <p>{{ product.description }}</p>
-          <span>{{ product.price }} USD</span>
+          <p>{{ product.price }} EUR</p>
+          <button @click="openModal(product)" class="view-details">
+            View Details
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <!-- Modal -->
+      <div v-if="showModal" class="modal-overlay">
+        <div class="modal-content">
+          <span class="close" @click="closeModal">&times;</span>
+
+          <!-- Editable Input Fields -->
+          <h2>
+            <input type="text" v-model="selectedProduct.name" />
+          </h2>
+
+          <img
+            :src="selectedProduct.image_url"
+            alt="Product Image"
+            style="width: 100px"
+          />
+
+          <!-- Editable Description Field -->
+          <textarea v-model="selectedProduct.description"></textarea>
+
+          <!-- Editable Price Field -->
+          <label for="price">Price (EUR):</label>
+          <input type="number" v-model="selectedProduct.price" id="price" />
+
+          <!-- Editable Type Field -->
+          <label for="type">Type:</label>
+          <input type="text" v-model="selectedProduct.type" id="type" />
+
+          <!-- Read-only SKU Field (usually not editable) -->
+          <label for="sku">SKU:</label>
+          <input type="text" v-model="selectedProduct.sku" id="sku" readonly />
+
+          <!-- Editable Category Field -->
+          <label for="category">Category ID:</label>
+          <input
+            type="number"
+            v-model="selectedProduct.category_id"
+            id="category"
+          />
+
+          <!-- Type-Specific Fields (Editable) -->
+          <div v-if="selectedProduct.type_specific_fields">
+            <h3>Type-Specific Fields</h3>
+            <ul>
+              <li
+                v-for="(value, key) in selectedProduct.type_specific_fields"
+                :key="key"
+              >
+                {{ key }}:
+                <input
+                  type="text"
+                  v-model="selectedProduct.type_specific_fields[key]"
+                />
+              </li>
+            </ul>
+          </div>
+
+          <!-- Delete and Save Buttons -->
+          <button
+            @click="deleteProduct(selectedProduct.sku)"
+            class="delete-button"
+          >
+            Delete Product
+          </button>
+          <button
+            @click="updateProduct(selectedProduct.sku)"
+            class="save-button"
+          >
+            Save Changes
+          </button>
         </div>
       </div>
     </div>
@@ -79,27 +156,95 @@
       new Vue({
         el: "#app",
         data: {
+          searchName: "",
+          selectedCategory: "",
+          selectedType: "",
+          priceMin: 0,
+          priceMax: 1000,
           products: [],
+          categories: [],
+          types: [],
+          showModal: false,
+          selectedProduct: {},
         },
         mounted() {
-          axios
-            .get(
-              "http://localhost/E-Commerce-Product-Catalog-API/backend/public/products"
-            )
-            .then((response) => {
-              console.log("Raw response data:", response.data);
-              // Check if response.data is a string (JSON) and parse it if necessary
-              const productData =
-                typeof response.data === "string"
-                  ? JSON.parse(response.data)
-                  : response.data;
-              // Assign the parsed data to this.products
-              this.products = Array.isArray(productData) ? productData : [];
-              console.log("Processed products:", this.products);
-            })
-            .catch((error) => {
+          this.fetchProducts();
+          this.fetchCategories();
+          this.fetchTypes();
+        },
+        methods: {
+          async fetchProducts() {
+            try {
+              const response = await axios.get(
+                "http://localhost/E-Commerce-Product-Catalog-API/backend/public/products",
+                {
+                  params: {
+                    name: this.searchName,
+                    category: this.selectedCategory,
+                    type: this.selectedType,
+                    price_min: this.priceMin,
+                    price_max: this.priceMax,
+                  },
+                }
+              );
+              this.products = response.data;
+            } catch (error) {
               console.error("Error fetching the products:", error);
-            });
+            }
+          },
+          async fetchCategories() {
+            try {
+              const response = await axios.get(
+                "http://localhost/E-Commerce-Product-Catalog-API/backend/public/categories"
+              );
+              this.categories = response.data;
+            } catch (error) {
+              console.error("Error fetching categories:", error);
+            }
+          },
+          fetchTypes() {
+            this.types = ["Electronics", "Books", "Clothing"];
+          },
+          // Method to delete the product
+          async deleteProduct(sku) {
+            try {
+              const response = await axios.delete(
+                `http://localhost/E-Commerce-Product-Catalog-API/backend/public/products/${sku}`
+              );
+
+              if (response.status === 204 || response.status === 200) {
+                alert("Product deleted successfully!");
+                this.closeModal();
+                this.fetchProducts(); // Refresh the product list after deletion
+              } else {
+                alert("Failed to delete the product.");
+              }
+            } catch (error) {
+              console.error("Error deleting the product:", error);
+              alert("An error occurred while deleting the product.");
+            }
+          },
+          async updateProduct(sku) {
+            try {
+              const response = await axios.put(
+                `http://localhost/E-Commerce-Product-Catalog-API/backend/public/products/${sku}`,
+                this.selectedProduct // Send the modified product object
+              );
+              alert("Product updated successfully!");
+              this.closeModal();
+              this.fetchProducts(); // Refresh the product list after updating
+            } catch (error) {
+              console.error("Error updating the product:", error);
+            }
+          },
+          openModal(product) {
+            this.selectedProduct = product; // Set the selected product details
+            this.showModal = true; // Show the modal
+          },
+          closeModal() {
+            this.showModal = false; // Hide the modal
+            this.selectedProduct = {}; // Clear selected product
+          },
         },
       });
     </script>

@@ -65,10 +65,12 @@ class ProductController {
         $result = (new ProductService())->deleteProduct($sku);
         
         if ($result) {
-            http_response_code(204); // No Content
+            http_response_code(200); 
+            echo json_encode(['message' => 'Product deleted successfully']);
         } else {
             http_response_code(404);
             echo json_encode(['error' => 'Product not found']);
         }
     }
+    
 }

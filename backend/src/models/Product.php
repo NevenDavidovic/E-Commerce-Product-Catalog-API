@@ -53,7 +53,7 @@ class Product {
     }
 
     public function findBySKU($sku) {
-        $query = "SELECT * FROM products WHERE SKU = :sku";
+        $query = "SELECT * FROM products WHERE sku = :sku";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':sku', $sku);
         $stmt->execute();
@@ -125,7 +125,7 @@ class Product {
         }
     
         // Remove the trailing comma and add the WHERE clause
-        $query = rtrim($query, ', ') . " WHERE SKU = :sku";
+        $query = rtrim($query, ', ') . " WHERE sku = :sku";
         $params[':sku'] = $sku;
     
         // Prepare the statement
@@ -146,9 +146,16 @@ class Product {
     
 
     public function delete($sku) {
-        $query = "DELETE FROM products WHERE SKU = :sku";
+        $query = "DELETE FROM products WHERE sku = :sku";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':sku', $sku);
-        return $stmt->execute();
+        
+        $result = $stmt->execute();
+        if (!$result) {
+            var_dump($stmt->errorInfo()); // Log SQL errors
+        }
+        
+        return $result;
     }
+    
 }

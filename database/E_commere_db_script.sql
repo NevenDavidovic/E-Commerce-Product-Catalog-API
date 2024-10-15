@@ -31,7 +31,7 @@ CREATE TABLE Attributes (
     product_id INT NOT NULL,
     attribute VARCHAR(50) NOT NULL,
     value VARCHAR(255) NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES Products(id)
+    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
 );
 
 -- Seed Categories
