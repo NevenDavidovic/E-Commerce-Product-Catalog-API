@@ -12,9 +12,22 @@
   </head>
   <body>
     <div id="app">
-      <h1>Product List</h1>
+      <header class="banner-header">
+        <div class="banner-content">
+          <h1 class="banner-title">
+            Welcome to Our E-Commerce Product Catalog
+          </h1>
+          <p class="banner-tagline">
+            Discover the best products at unbeatable prices!
+          </p>
+        </div>
+      </header>
 
       <div class="filters-section">
+        <button @click="openAddProductModal" class="add-product-button">
+          Add New Product
+        </button>
+
         <input
           type="text"
           v-model="searchName"
@@ -136,6 +149,77 @@
           </button>
         </div>
       </div>
+
+      <!-- Add Product Modal -->
+      <div v-if="showAddProductModal" class="modal-overlay">
+        <div class="modal-content">
+          <span class="close" @click="closeAddProductModal">&times;</span>
+
+          <h2>Add New Product</h2>
+
+          <form @submit.prevent="submitProduct">
+            <label for="sku">SKU:</label>
+            <input type="text" v-model="newProduct.sku" id="sku" required />
+
+            <label for="name">Name:</label>
+            <input type="text" v-model="newProduct.name" id="name" required />
+
+            <label for="description">Description:</label>
+            <textarea
+              v-model="newProduct.description"
+              id="description"
+            ></textarea>
+
+            <label for="price">Price (EUR):</label>
+            <input
+              type="number"
+              v-model="newProduct.price"
+              id="price"
+              required
+              step="0.01"
+              min="0"
+            />
+
+            <label for="type">Type:</label>
+            <select
+              class="category-select"
+              v-model="newProduct.type"
+              id="type"
+              required
+            >
+              <option value="physical">Physical</option>
+              <option value="virtual">Virtual</option>
+            </select>
+
+            <label for="category_id">Category:</label>
+            <select
+              class="category-select"
+              v-model="newProduct.category_id"
+              id="category_id"
+              required
+            >
+              <option value="">Select a category</option>
+              <option
+                v-for="category in categories"
+                :key="category.id"
+                :value="category.id"
+              >
+                {{ category.name }}
+              </option>
+            </select>
+
+            <label for="image_url">Image URL:</label>
+            <input
+              type="text"
+              v-model="newProduct.image_url"
+              id="image_url"
+              required
+            />
+
+            <button type="submit" class="submit-button">Add Product</button>
+          </form>
+        </div>
+      </div>
     </div>
 
     <script>
@@ -152,6 +236,16 @@
           types: [],
           showModal: false,
           selectedProduct: {},
+          showAddProductModal: false,
+          newProduct: {
+            sku: "",
+            name: "",
+            description: "",
+            price: null,
+            type: "physical",
+            category_id: null,
+            image_url: "",
+          },
         },
 
         computed: {
@@ -240,6 +334,43 @@
           closeModal() {
             this.showModal = false; // Hide the modal
             this.selectedProduct = {}; // Clear selected product
+          },
+          openAddProductModal() {
+            this.showAddProductModal = true; // Show the add product modal
+          },
+
+          closeAddProductModal() {
+            this.showAddProductModal = false; // Hide the modal
+            this.resetNewProduct(); // Reset form fields
+          },
+
+          resetNewProduct() {
+            this.newProduct = {
+              sku: "",
+              name: "",
+              description: "",
+              price: null,
+              type: "physical",
+              category_id: null,
+              image_url: "",
+            };
+          },
+          async submitProduct() {
+            try {
+              const response = await axios.post(
+                "http://localhost/E-Commerce-Product-Catalog-API/backend/public/products",
+                this.newProduct // Send the new product data
+              );
+
+              if (response.status === 201) {
+                alert("Product added successfully!");
+                this.closeAddProductModal();
+                this.fetchProducts(); // Refresh the product list
+              }
+            } catch (error) {
+              console.error("Error adding the product:", error);
+              alert("An error occurred while adding the product.");
+            }
           },
         },
       });
