@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product List</title>
 
-    <!-- Vue.js (Production build) -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
-    <!-- Axios -->
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="css/styles.css" />
   </head>
@@ -16,7 +15,6 @@
       <h1>Product List</h1>
 
       <div class="filters-section">
-        <!-- Search Bar -->
         <input
           type="text"
           v-model="searchName"
@@ -24,7 +22,6 @@
           @input="fetchProducts"
         />
 
-        <!-- Category Dropdown -->
         <select v-model="selectedCategory" @change="fetchProducts">
           <option value="">All Categories</option>
           <option
@@ -36,15 +33,13 @@
           </option>
         </select>
 
-        <!-- Type Filter
         <select v-model="selectedType" @change="fetchProducts">
           <option value="">All Types</option>
           <option v-for="type in types" :key="type" :value="type">
             {{ type }}
           </option>
-        </select> -->
+        </select>
 
-        <!-- Price Range Slider -->
         <label for="priceMin">Price Min: {{ priceMin }}</label>
         <input
           type="range"
@@ -78,13 +73,10 @@
         </div>
       </div>
 
-      <!-- Modal -->
-      <!-- Modal -->
       <div v-if="showModal" class="modal-overlay">
         <div class="modal-content">
           <span class="close" @click="closeModal">&times;</span>
 
-          <!-- Editable Input Fields -->
           <h2>
             <input type="text" v-model="selectedProduct.name" />
           </h2>
@@ -95,22 +87,17 @@
             style="width: 100px"
           />
 
-          <!-- Editable Description Field -->
           <textarea v-model="selectedProduct.description"></textarea>
 
-          <!-- Editable Price Field -->
           <label for="price">Price (EUR):</label>
           <input type="number" v-model="selectedProduct.price" id="price" />
 
-          <!-- Editable Type Field -->
           <label for="type">Type:</label>
           <input type="text" v-model="selectedProduct.type" id="type" />
 
-          <!-- Read-only SKU Field (usually not editable) -->
           <label for="sku">SKU:</label>
           <input type="text" v-model="selectedProduct.sku" id="sku" readonly />
 
-          <!-- Editable Category Field -->
           <label for="category">Category ID:</label>
           <input
             type="number"
@@ -118,7 +105,6 @@
             id="category"
           />
 
-          <!-- Type-Specific Fields (Editable) -->
           <div v-if="selectedProduct.type_specific_fields">
             <h3>Type-Specific Fields</h3>
             <ul>
@@ -203,7 +189,7 @@
             }
           },
           fetchTypes() {
-            this.types = ["Electronics", "Books", "Clothing"];
+            this.types = ["virtual", "physical"];
           },
           // Method to delete the product
           async deleteProduct(sku) {
