@@ -135,38 +135,31 @@ h1 {
   max-width: 500px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-/* Modal overlay to cover the entire screen */
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.6
-  ); /* Dark overlay with some transparency */
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
-  align-items: center; /* Center the modal */
-  z-index: 999; /* Ensure it's on top */
+  align-items: center;
+  z-index: 999;
 }
 
-/* Modal content */
 .modal-content {
-  background-color: #fff; /* White background */
+  background-color: #fff;
   padding: 20px;
-  border-radius: 8px; /* Smooth corners */
+  border-radius: 8px;
   width: 400px;
   max-width: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for a 3D effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  position: relative; /* For the close button */
+  position: relative;
 }
 
-/* Close button (X) */
 .close {
   position: absolute;
   top: 10px;
@@ -175,38 +168,33 @@ h1 {
   cursor: pointer;
 }
 
-/* Make the close button more noticeable on hover */
 .close:hover {
   color: #ff4d4d;
 }
 
-/* Style for modal headings */
 .modal-content h2 {
   margin: 0 0 10px 0;
   font-size: 24px;
 }
 
-/* Image inside the modal */
 .modal-content img {
   display: block;
-  margin: 10px auto; /* Center the image */
-  max-width: 100px;
+  margin: 10px auto;
+  max-width: 100%;
   height: auto;
 }
 
-/* Fields in modal */
 .modal-content p,
 .modal-content input,
 .modal-content textarea {
   margin: 10px 0;
   width: 100%;
   padding: 8px;
-  box-sizing: border-box; /* Ensures padding doesn’t affect width */
+  box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-/* Button styling for delete and save buttons */
 button {
   padding: 10px 20px;
   margin: 10px 5px;
@@ -259,4 +247,26 @@ button {
 
 .view-details:active {
   background-color: #00408a;
+}
+
+.category-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.category-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.category-select option {
+  padding: 10px;
 }

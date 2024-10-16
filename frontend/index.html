@@ -81,12 +81,8 @@
             <input type="text" v-model="selectedProduct.name" />
           </h2>
 
-          <img
-            :src="selectedProduct.image_url"
-            alt="Product Image"
-            style="width: 100px"
-          />
-
+          <img :src="selectedProduct.image_url" alt="Product Image" />
+          <label for="price">Short description:</label>
           <textarea v-model="selectedProduct.description"></textarea>
 
           <label for="price">Price (EUR):</label>
@@ -98,12 +94,16 @@
           <label for="sku">SKU:</label>
           <input type="text" v-model="selectedProduct.sku" id="sku" readonly />
 
-          <label for="category">Category ID:</label>
-          <input
-            type="number"
-            v-model="selectedProduct.category_id"
-            id="category"
-          />
+          <label for="category">Category:</label>
+          <select class="category-select" v-model="selectedProduct.category_id">
+            <option
+              v-for="category in categories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
 
           <div v-if="selectedProduct.type_specific_fields">
             <h3>Type-Specific Fields</h3>
@@ -153,6 +153,16 @@
           showModal: false,
           selectedProduct: {},
         },
+
+        computed: {
+          selectedCategoryName() {
+            const category = this.categories.find(
+              (cat) => cat.id === this.selectedProduct.category_id
+            );
+            return category ? category.name : "";
+          },
+        },
+
         mounted() {
           this.fetchProducts();
           this.fetchCategories();
