@@ -45,6 +45,10 @@ URL: http://localhost/e-commerce-product-catalog-api/backend/public/
 
 Once XAMPP is running and Apache/MySQL are active, you can access the API using the browser(frontend side of the app) or Postman.
 
+## **Step 5: Running the frontend conected to API**
+
+Just use live server extension to launch the frontend in Vue or go to the foolder and just double click the index.html(frontend/index.html) after running the backend.
+
 ## **API Endpoints**
 
 ### **Product Endpoints**
@@ -117,7 +121,6 @@ Once XAMPP is running and Apache/MySQL are active, you can access the API using 
 ---
 
 # Screenshots of usage of the App
+
 ![image](https://github.com/user-attachments/assets/f78892d2-ae06-4acc-85da-13429221dd65)
 ![image](https://github.com/user-attachments/assets/2f234a0d-54dd-4273-9f9d-278df31b0e34)
-
-
