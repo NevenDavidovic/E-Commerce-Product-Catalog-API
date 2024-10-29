@@ -1,17 +1,17 @@
 <?php
 
-require_once '../src/Models/Category.php'; // Adjust the path as necessary
-require_once '../src/Services/CategoryService.php'; // Assuming you have a CategoryService
+require_once '../src/Models/Category.php';
+require_once '../src/Services/CategoryService.php'; 
 
 class CategoryController {
     public function getAllCategories() {
-        $categories = (new CategoryService())->getAllCategories(); // Assuming you have a getAllCategories method in CategoryService
+        $categories = (new CategoryService())->getAllCategories(); 
         echo json_encode($categories);
     }
 
     public function getCategoryById($vars) {
         $id = $vars['id']; // Get the ID from the route variables
-        $category = (new CategoryService())->getCategoryById($id); // Assuming you have a getCategoryById method in CategoryService
+        $category = (new CategoryService())->getCategoryById($id); 
         
         if ($category) {
             echo json_encode($category);
